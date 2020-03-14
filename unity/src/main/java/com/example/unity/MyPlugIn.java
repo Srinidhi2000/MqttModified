@@ -35,7 +35,7 @@ public class MyPlugIn {
     }
     private void subscribeNewSwitch(){
       mqttHelper.setSubscriptionTopic(Integer.toString(mqttHelper.switchList.size()));
-      mqttHelper.subscribeToTopic();
+      mqttHelper.subscribeToTopic(1);
     }
 
     public ArrayList<String> getStateInit(){

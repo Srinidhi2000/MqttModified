@@ -88,6 +88,15 @@ public class MQTTHelper extends Service {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
+                   if(!switchList.isEmpty())
+                   {
+                       for(int i=0;i<switchList.size();i++)
+                       {
+                           setSubscriptionTopic(Integer.toString(i));
+                           subscribeToTopic(0);
+                       }
+                   }
+
                 }
 
                 @Override
@@ -103,13 +112,13 @@ public class MQTTHelper extends Service {
     }
 
     //Subscribes for power on and off
-    public void subscribeToTopic() {
+    public void subscribeToTopic(final int type) {
         try {
             mqttAndroidClient.subscribe(subscriptionTopic, 1, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.w(TAG+"mqtt","Subscribed!");
-                    switchList.add("0");
+                    if(type==1){switchList.add("0");}
                 }
 
                 @Override

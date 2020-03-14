@@ -53,11 +53,14 @@ public class MQTTHelper extends Service {
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.w(TAG+"mqtt", message.toString());
             if(topic.equals(statusTopic))
-            { if(message.toString().equals("ON")){
-                switchList.set((topic.indexOf("sw")+2),"1");}
+            { String s=topic;
+             s=s.replace("stat/sw","");
+             s=s.replace("/POWER","");
+                if(message.toString().equals("ON")){
+                switchList.set(Integer.parseInt(s),"1");}
                 else
                 {
-                    switchList.set((topic.indexOf("sw")+2),"1");}
+                    switchList.set(Integer.parseInt(s),"0");}
             }
             }
 
@@ -109,7 +112,6 @@ public class MQTTHelper extends Service {
                     switchList.add("0");
                 }
 
-
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w(TAG+"mqtt", "Subscribed fail!");
@@ -128,7 +130,7 @@ public class MQTTHelper extends Service {
 
     //returns an arraylist of status for all the switches
     public ArrayList<String> getStatus()
-    { if(switchList!=null)
+    { if(!switchList.isEmpty())
     {for(int i=0;i<switchList.size();i++)
     {   setStatusTopic(Integer.toString(i));
         try {

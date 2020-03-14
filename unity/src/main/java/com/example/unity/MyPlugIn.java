@@ -27,25 +27,21 @@ public class MyPlugIn {
     public void setContext (Context unityContext){
         Log.d(TAG, "setContext: set");
         context=unityContext;
-        mqttHelper=new MQTTHelper(context);
-
+        mqttHelper =new MQTTHelper(context);
     }
-
     private void publish(String switchNum){
         mqttHelper.setSubscriptionTopic(switchNum);
             mqttHelper.toPublish(switchNum);
     }
-
     private void subscribeNewSwitch(){
       mqttHelper.setSubscriptionTopic(Integer.toString(mqttHelper.switchList.size()));
-        mqttHelper.subscribeToTopic();
+      mqttHelper.subscribeToTopic();
     }
 
     public ArrayList<String> getStateInit(){
     ArrayList<String> switchList= mqttHelper.getStatus();
+    if(!mqttHelper.switchList.isEmpty())
+    {mqttHelper.unSubscribeToTopic();}
     return switchList;
-    }
-    public void unsubscribe(){
-        mqttHelper.unSubscribeToTopic();
     }
 }

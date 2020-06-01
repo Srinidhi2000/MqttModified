@@ -31,8 +31,9 @@ public class MyPlugIn {
     }
     private void publish(String switchNum){
         mqttHelper.setSubscriptionTopic(switchNum);
-            mqttHelper.toPublish(switchNum);
+        mqttHelper.toPublish(switchNum);
     }
+
     private void subscribeNewSwitch(){
       mqttHelper.setSubscriptionTopic(Integer.toString(mqttHelper.switchList.size()));
       mqttHelper.subscribeToTopic(1);
@@ -43,5 +44,9 @@ public class MyPlugIn {
     if(!mqttHelper.switchList.isEmpty())
     {mqttHelper.unSubscribeToTopic();}
     return switchList;
+    }
+    public void GetIPAddress(String IP){
+        Log.d(TAG, "GetIPAdreess called");
+        mqttHelper =new MQTTHelper(context,IP);
     }
 }

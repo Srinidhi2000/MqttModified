@@ -42,9 +42,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
-task copyPlugin(type: Copy){
-    dependsOn assemble
-    from('build/outputs/aar')
-    into('C:/Users/AYUSH/New Unity Project/Assets/Plugins/Android')
-    include(project.name+'-release.aar')
-}
+//task copyPlugin(type: Copy){
+//    dependsOn assemble
+//    from('build/outputs/aar')
+//    into('C:/Users/AYUSH/New Unity Project/Assets/Plugins/Android')
+//    include(project.name+'-release.aar')
+//}

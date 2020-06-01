@@ -23,7 +23,8 @@ import java.util.ArrayList;
 
 public class MQTTHelper extends Service {
     public MqttAndroidClient mqttAndroidClient;
-    final String ServerUri = "tcp://192.168.137.251:1883";
+    public String IP="192.168.43.236:1883";
+    String ServerUri = "tcp://"+IP;
     final String clientId = "ExampleAndroidClient";
     String subscriptionTopic;
     String statusTopic;
@@ -32,7 +33,7 @@ public class MQTTHelper extends Service {
     ArrayList<String> switchList=new ArrayList<>();
     private static final String TAG = "MyPlugIn";
 
-    //Constructor
+    // default Constructor
     public MQTTHelper(Context context) {
         this.mcontext= context;
         mqttAndroidClient = new MqttAndroidClient(context, ServerUri, clientId);
@@ -52,6 +53,7 @@ public class MQTTHelper extends Service {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.w(TAG+"mqtt", message.toString());
+
             if(topic.equals(statusTopic))
             { String s=topic;
              s=s.replace("stat/sw","");
@@ -71,7 +73,46 @@ public class MQTTHelper extends Service {
         });
         connectToUri();
     }
+    public MQTTHelper(Context context,String ip) {
+        this.mcontext= context;
+        IP=ip;
+        ServerUri="tcp://"+ip;
+        mqttAndroidClient = new MqttAndroidClient(context, ServerUri, clientId);
+        Log.d(TAG, "MQTTHelper: IPSet");
+        //executed whenever a new value arrives for the subscribed topics
+        mqttAndroidClient.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+                Log.w(TAG+"mqtt", serverURI);
+            }
 
+            @Override
+            public void connectionLost(Throwable cause) {
+                Toast.makeText(mcontext, "Connection_lost", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                Log.w(TAG+"mqtt", message.toString());
+                if(topic.equals(statusTopic))
+                { String s=topic;
+                    s=s.replace("stat/sw","");
+                    s=s.replace("/POWER","");
+                    if(message.toString().equals("ON")){
+                        switchList.set(Integer.parseInt(s),"1");}
+                    else
+                    {
+                        switchList.set(Integer.parseInt(s),"0");}
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+                Log.w(TAG+"mqtt", token.toString());
+            }
+        });
+        connectToUri();
+    }
     private void connectToUri(){
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
@@ -102,6 +143,7 @@ public class MQTTHelper extends Service {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w(TAG+"mqtt", "Failed to connect to: " + ServerUri + exception.toString());
+                    Toast.makeText(mcontext, "Failed to connect to"+ServerUri, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -113,8 +155,8 @@ public class MQTTHelper extends Service {
 
     //Subscribes for power on and off
     public void subscribeToTopic(final int type) {
-        try {
-            mqttAndroidClient.subscribe(subscriptionTopic, 1, null, new IMqttActionListener() {
+         try {
+           mqttAndroidClient.subscribe(subscriptionTopic, 1, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.w(TAG+"mqtt","Subscribed!");
@@ -127,8 +169,10 @@ public class MQTTHelper extends Service {
                 }
             });
 
-        } catch (MqttException ex) {
+        }
+          catch (MqttException ex) {
             System.err.println("Exception subscribing");
+              Log.d(TAG, "subscribeToTopic: someproblem in subscribe");
             ex.printStackTrace();
         }
     }

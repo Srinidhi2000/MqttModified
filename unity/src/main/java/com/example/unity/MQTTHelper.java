@@ -37,7 +37,6 @@ public class MQTTHelper extends Service {
     public MQTTHelper(Context context) {
         this.mcontext= context;
         mqttAndroidClient = new MqttAndroidClient(context, ServerUri, clientId);
-
         //executed whenever a new value arrives for the subscribed topics
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override

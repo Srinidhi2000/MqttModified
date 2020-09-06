@@ -9,12 +9,14 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyPlugIn {
     private static final MyPlugIn ourInstance = new MyPlugIn();
     private static final String TAG = "MyPlugIn";
     MQTTHelper mqttHelper;
     Context context;
+    ArrayList<String> switchList=new ArrayList<>();
 
     public static MyPlugIn getInstance() {
         return ourInstance;
@@ -29,21 +31,30 @@ public class MyPlugIn {
         context=unityContext;
         mqttHelper =new MQTTHelper(context);
     }
-    private void publish(String switchNum){
+
+    public void publish(String switchNum){
         mqttHelper.setSubscriptionTopic(switchNum);
         mqttHelper.toPublish(switchNum);
     }
 
-    private void subscribeNewSwitch(){
+    public void subscribeNewSwitch(){
       mqttHelper.setSubscriptionTopic(Integer.toString(mqttHelper.switchList.size()));
       mqttHelper.subscribeToTopic(1);
     }
-
-    public ArrayList<String> getStateInit(){
-    ArrayList<String> switchList= mqttHelper.getStatus();
-    if(!mqttHelper.switchList.isEmpty())
-    {mqttHelper.unSubscribeToTopic();}
-    return switchList;
+    public int getLength(){
+        switchList= mqttHelper.getStatus();
+        if(!mqttHelper.switchList.isEmpty())
+        {mqttHelper.unSubscribeToTopic();}
+        return switchList.size();
+//return 2;
+    }
+    public String getStateInit(String index){
+        return switchList.get(Integer.parseInt(index));
+//    if(index.equals("0")){
+//        return ("sp");
+//    }else{
+//        return ("sss");
+//    }
     }
     public void GetIPAddress(String IP){
         Log.d(TAG, "GetIPAdreess called");

@@ -46,7 +46,7 @@ public class MQTTHelper extends Service {
 
             @Override
             public void connectionLost(Throwable cause) {
-                Toast.makeText(mcontext, "Connection_lost", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mcontext, "Connection_lost", //Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -87,7 +87,7 @@ public class MQTTHelper extends Service {
 
             @Override
             public void connectionLost(Throwable cause) {
-                Toast.makeText(mcontext, "Connection_lost", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mcontext, "Connection_lost", //Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -142,7 +142,7 @@ public class MQTTHelper extends Service {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w(TAG+"mqtt", "Failed to connect to: " + ServerUri + exception.toString());
-                    Toast.makeText(mcontext, "Failed to connect to"+ServerUri, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mcontext, "Failed to connect to"+ServerUri, //Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -165,6 +165,7 @@ public class MQTTHelper extends Service {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w(TAG+"mqtt", "Subscribed fail!");
+                    Toast.makeText(mcontext, "Subscription failed",Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -172,6 +173,7 @@ public class MQTTHelper extends Service {
           catch (MqttException ex) {
             System.err.println("Exception subscribing");
               Log.d(TAG, "subscribeToTopic: someproblem in subscribe");
+             Toast.makeText(mcontext, "subscribeToTopic: someproblem in subscribe", Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }
@@ -195,11 +197,13 @@ public class MQTTHelper extends Service {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w(TAG+"mqtt", "Subscribed fail!");
+                   Toast.makeText(mcontext, "subscription failed initially",Toast.LENGTH_LONG).show();
                 }
             });
 
         } catch (MqttException ex) {
             System.err.println("Exception subscribing");
+            Toast.makeText(mcontext, "exception in subscribing initially",Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
 
@@ -231,9 +235,11 @@ public class MQTTHelper extends Service {
                         // some error occurred, this is very unlikely as even if the client
                         // did not had a subscription to the topic the unsubscribe action
                         // will be successfully
+                        //Toast.makeText(mcontext, "unsubscribeToTopic: someproblem in unsubscribe"+exception.toString(), //Toast.LENGTH_LONG).show();
                     }
                 });
             } catch (MqttException e) {
+                ////Toast.makeText(mcontext, "unsubscribeToTopic: someproblem in unsubscribe"+e.getMessage(), //Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }}
     }
@@ -248,9 +254,25 @@ public class MQTTHelper extends Service {
         else
         {changeSwitch="ON";
             switchList.set(Integer.parseInt(switchNum),"1");}
-        try {
-            mqttAndroidClient.publish(subscriptionTopic, changeSwitch.getBytes(),0,true);
+
+  try {
+      mqttAndroidClient.publish(subscriptionTopic, changeSwitch.getBytes(),0,true);
+//            IMqttToken pubToken=mqttAndroidClient.publish(subscriptionTopic, changeSwitch.getBytes(),0,true);
+//            pubToken.setActionCallback(new IMqttActionListener() {
+//                @Override
+//                public void onSuccess(IMqttToken asyncActionToken) {
+//                  // //Toast.makeText(mcontext,"Successfully Published",//Toast.LENGTH_LONG).show();
+//                }
+//
+//                @Override
+//                public void onFailure(IMqttToken asyncActionToken,
+//                                      Throwable exception) {
+//                    Toast.makeText(mcontext, "problem in publishing"+exception.toString(), Toast.LENGTH_LONG).show();
+//                }
+//            });
+
         } catch ( MqttException e) {
+          //  //Toast.makeText(mcontext, "problem in publishing"+e.getMessage(), //Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

@@ -39,6 +39,7 @@ public class MyPlugIn {
 
     public void subscribeNewSwitch(){
       mqttHelper.setSubscriptionTopic(Integer.toString(mqttHelper.switchList.size()));
+        Toast.makeText(context,"topic="+Integer.toString(mqttHelper.switchList.size()),Toast.LENGTH_LONG).show();
       mqttHelper.subscribeToTopic(1);
     }
     public int getLength(){
